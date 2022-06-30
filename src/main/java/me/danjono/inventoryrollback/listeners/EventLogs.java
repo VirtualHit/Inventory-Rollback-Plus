@@ -42,7 +42,7 @@ public class EventLogs implements Listener {
 	    Player player = event.getPlayer();
 	    Player enemy = event.getPvPlayer().getEnemy().getPlayer();
 	    
-	    new SaveInventory(player, LogType.COMBATLOG, null, "CombatLog (" + enemy.getName() + ")", player.getInventory(), player.getEnderChest()).createSave(true);
+	    new SaveInventory(player, LogType.DEATH, null, "CombatLog (" + enemy.getName() + ")", player.getInventory(), player.getEnderChest()).createSave(true);
 	}
 	
 	@EventHandler
