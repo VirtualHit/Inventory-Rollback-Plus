@@ -4,8 +4,6 @@ import com.nuclyon.technicallycoded.inventoryrollback.InventoryRollbackPlus;
 import com.nuclyon.technicallycoded.inventoryrollback.nms.EnumNmsVersion;
 import org.bukkit.Sound;
 
-import me.danjono.inventoryrollback.InventoryRollback;
-
 public class SoundData extends ConfigData {
 
 	private InventoryRollbackPlus main;

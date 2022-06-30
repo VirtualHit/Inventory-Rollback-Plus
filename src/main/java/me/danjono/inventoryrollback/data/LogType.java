@@ -5,6 +5,7 @@ public enum LogType {
     QUIT,
     DEATH,
     WORLD_CHANGE,
+    COMBATLOG,
     FORCE,
     UNKNOWN;
 }

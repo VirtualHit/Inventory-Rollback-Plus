@@ -68,7 +68,13 @@
             <version>3.12.0</version>
             <scope>compile</scope>
         </dependency>
-
+        <!-- PvPManager -->
+        <dependency>
+            <groupId>me.NoChance.PvPManager</groupId>
+            <artifactId>PvPManager</artifactId>
+            <version>3.9.4</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>

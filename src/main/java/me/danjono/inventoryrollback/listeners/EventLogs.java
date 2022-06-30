@@ -2,8 +2,9 @@ package me.danjono.inventoryrollback.listeners;
 
 import com.nuclyon.technicallycoded.inventoryrollback.InventoryRollbackPlus;
 import com.nuclyon.technicallycoded.inventoryrollback.nms.EnumNmsVersion;
+
+import me.NoChance.PvPManager.Events.PlayerCombatLogEvent;
 import me.danjono.inventoryrollback.config.ConfigData;
-import me.danjono.inventoryrollback.config.MessageData;
 import me.danjono.inventoryrollback.data.LogType;
 import me.danjono.inventoryrollback.inventory.SaveInventory;
 import org.bukkit.entity.Entity;
@@ -28,7 +29,22 @@ public class EventLogs implements Listener {
 	public EventLogs() {
 		this.main = InventoryRollbackPlus.getInstance();
 	}
+	
+	/**
+	 * @author Atog
+	 */
+	@EventHandler(priority = EventPriority.HIGHEST)
+	private void combatLog(PlayerCombatLogEvent event) {
+	    if (!ConfigData.isEnabled()) {
+	        return;
+	    }
 
+	    Player player = event.getPlayer();
+	    Player enemy = event.getPvPlayer().getEnemy().getPlayer();
+	    
+	    new SaveInventory(player, LogType.COMBATLOG, null, "CombatLog (" + enemy.getName() + ")", player.getInventory(), player.getEnderChest()).createSave(true);
+	}
+	
 	@EventHandler
 	private void playerJoin(PlayerJoinEvent e) {
 		if (!ConfigData.isEnabled()) return;

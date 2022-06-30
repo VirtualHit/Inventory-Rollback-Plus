@@ -132,7 +132,7 @@ public abstract class InventoryRollback extends JavaPlugin {
         V1_13_PLUS
     }*/
 
-    private static EnumNmsVersion version = EnumNmsVersion.v1_13_R1;
+    //private static EnumNmsVersion version = EnumNmsVersion.v1_13_R1;
 
     public abstract void setVersion(EnumNmsVersion versionName);
     /*{

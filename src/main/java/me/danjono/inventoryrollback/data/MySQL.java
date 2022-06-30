@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
 
 import com.nuclyon.technicallycoded.inventoryrollback.InventoryRollbackPlus;
 import org.apache.commons.lang3.StringUtils;
