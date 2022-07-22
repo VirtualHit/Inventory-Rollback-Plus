@@ -3,6 +3,7 @@ package me.danjono.inventoryrollback.listeners;
 import com.nuclyon.technicallycoded.inventoryrollback.InventoryRollbackPlus;
 import com.nuclyon.technicallycoded.inventoryrollback.nms.EnumNmsVersion;
 
+import me.NoChance.PvPManager.PvPlayer;
 import me.NoChance.PvPManager.Events.PlayerCombatLogEvent;
 import me.danjono.inventoryrollback.config.ConfigData;
 import me.danjono.inventoryrollback.data.LogType;
@@ -17,6 +18,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.projectiles.BlockProjectileSource;
@@ -43,6 +45,20 @@ public class EventLogs implements Listener {
 	    Player enemy = event.getPvPlayer().getEnemy().getPlayer();
 	    
 	    new SaveInventory(player, LogType.DEATH, null, "CombatLog (" + enemy.getName() + ")", player.getInventory(), player.getEnderChest()).createSave(true);
+	}
+	
+	/**
+     * @author Atog
+     */
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onSuicide(PlayerCommandPreprocessEvent event) {
+	    Player player = event.getPlayer();
+	    PvPlayer pvp = PvPlayer.get(event.getPlayer());
+	    if(!event.getMessage().equalsIgnoreCase("/suicide") || !ConfigData.isEnabled() || pvp.isInCombat() || !player.hasPermission("essentials.suicide")) {
+	        return;
+	    }
+	    
+	    new SaveInventory(event.getPlayer(), LogType.DEATH, null, "Suicide (/suicide)", player.getInventory(), player.getEnderChest()).createSave(true);;
 	}
 	
 	@EventHandler
