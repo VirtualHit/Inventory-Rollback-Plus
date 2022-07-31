@@ -8,6 +8,8 @@ import me.NoChance.PvPManager.Events.PlayerCombatLogEvent;
 import me.danjono.inventoryrollback.config.ConfigData;
 import me.danjono.inventoryrollback.data.LogType;
 import me.danjono.inventoryrollback.inventory.SaveInventory;
+
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -17,6 +19,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -54,11 +57,31 @@ public class EventLogs implements Listener {
 	public void onSuicide(PlayerCommandPreprocessEvent event) {
 	    Player player = event.getPlayer();
 	    PvPlayer pvp = PvPlayer.get(event.getPlayer());
-	    if(!event.getMessage().equalsIgnoreCase("/suicide") || !ConfigData.isEnabled() || pvp.isInCombat() || !player.hasPermission("essentials.suicide")) {
+	    if(!event.getMessage().startsWith("/suicide") || !ConfigData.isEnabled() || pvp.isInCombat() || !player.hasPermission("essentials.suicide")) {
 	        return;
 	    }
 	    
 	    new SaveInventory(event.getPlayer(), LogType.DEATH, null, "Suicide (/suicide)", player.getInventory(), player.getEnderChest()).createSave(true);;
+	}
+	
+	/**
+	 * @author Atog
+	 */
+	//@EventHandler(priority = EventPriority.MONITOR)
+	public void onKill(PlayerCommandPreprocessEvent event) {
+	    Player caster = event.getPlayer();
+	    String[] command = event.getMessage().split(" ");
+	    if(!command[0].startsWith("/kill") || !ConfigData.isEnabled() || !caster.hasPermission("essentials.kill")) {
+	        return;
+	    }
+	    
+	    Player target = Bukkit.getPlayer(command.length == 0 ? caster.getName() : command[1]);
+	    
+	    if(target == null || !target.isOnline()) {
+	        return;
+	    }
+	    
+	    new SaveInventory(target, LogType.DEATH, null, "/kill (by " + caster.getName() + ")", target.getInventory(), target.getEnderChest());
 	}
 	
 	@EventHandler
@@ -134,8 +157,17 @@ public class EventLogs implements Listener {
 				reason = event.getCause().name() + " (" + damageByEntityEvent.getDamager().getName() + shooterName + ")";
 			}
 
+			// CONVERT CAUSE
+			DamageCause cause = event.getCause();
+			
+			if(cause == DamageCause.CUSTOM) {
+			    reason = "/kill";
+			} else if(cause == DamageCause.SUICIDE) {
+			    reason = "Suicidio o self /kill";
+			}
+			
 			// After all checks, create the save with data provided above
-			new SaveInventory(player, LogType.DEATH, event.getCause(), reason, player.getInventory(), player.getEnderChest()).createSave(true);
+			new SaveInventory(player, LogType.DEATH, cause, reason, player.getInventory(), player.getEnderChest()).createSave(true);
 		}
 	}
 
